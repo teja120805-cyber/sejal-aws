@@ -1,0 +1,13 @@
+{
+  "app": "python app.py",
+  "watch": {
+    "include": ["**"],
+    "exclude": ["README.md", "cdk*.json", "**/__pycache__", ".venv", "tests"]
+  },
+  "context": {
+    "region": "ap-south-1",
+    "stage": "dev",
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:checkSecretUsage": true
+  }
+}

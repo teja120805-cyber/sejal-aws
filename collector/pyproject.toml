@@ -1,0 +1,9 @@
+# Tooling config only; the collector is packaged by CDK, not installed.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+extend = "../backend/pyproject.toml"
+src = [".", "../backend/src"]

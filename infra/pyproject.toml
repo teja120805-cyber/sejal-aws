@@ -1,0 +1,9 @@
+# Tooling config only.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+extend = "../backend/pyproject.toml"
+src = ["."]

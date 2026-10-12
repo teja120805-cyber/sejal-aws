@@ -1,0 +1,2 @@
+# The collector reuses the shared finops package from /backend.
+-e ../backend

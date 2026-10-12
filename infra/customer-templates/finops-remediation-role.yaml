@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  FinOps Platform - OPTIONAL remediation role. Deploy only if you want to run one-click fixes
+  from the dashboard. It allows exactly three write actions (stop an instance, delete an EBS volume
+  after snapshotting it, release an Elastic IP). Every action also requires a confirmation dialog
+  in the platform and REMEDIATION_ENABLED=true on the platform side.
+
+Parameters:
+  TrustedAccountId:
+    Type: String
+    AllowedPattern: "^\\d{12}$"
+    Description: AWS account ID where the FinOps platform runs.
+  ExternalId:
+    Type: String
+    MinLength: 16
+    MaxLength: 128
+    AllowedPattern: "^[\\w+=,.@:/-]+$"
+    NoEcho: true
+    Description: The same ExternalId used for the read-only role.
+  RoleName:
+    Type: String
+    Default: FinOpsRemediation
+    AllowedPattern: "^FinOps[\\w+=,.@-]{0,58}$"
+    Description: Must start with FinOps - the platform may only assume roles named FinOps*.
+
+Resources:
+  FinOpsRemediationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref RoleName
+      Description: Narrow write access for FinOps one-click remediation.
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:${AWS::Partition}:iam::${TrustedAccountId}:root"
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref ExternalId
+      Policies:
+        - PolicyName: FinOpsRemediation
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: RemediationActions
+                Effect: Allow
+                Action:
+                  - ec2:StopInstances
+                  - ec2:DeleteVolume
+                  - ec2:ReleaseAddress
+                Resource: "*"
+                # Resources tagged finops:protected (any value) can never be changed by the platform.
+                Condition:
+                  "Null":
+                    "aws:ResourceTag/finops:protected": "true"
+              - Sid: SafetySnapshotBeforeDelete
+                Effect: Allow
+                Action:
+                  - ec2:CreateSnapshot
+                  - ec2:CreateTags
+                Resource: "*"
+              - Sid: DescribeForChecks
+                Effect: Allow
+                Action:
+                  - ec2:DescribeInstances
+                  - ec2:DescribeVolumes
+                  - ec2:DescribeAddresses
+                Resource: "*"
+
+Outputs:
+  RoleArn:
+    Description: Optional - paste into the account's Settings to enable remediation.
+    Value: !GetAtt FinOpsRemediationRole.Arn

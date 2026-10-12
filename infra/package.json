@@ -1,0 +1,12 @@
+{
+  "name": "finops-infra",
+  "private": true,
+  "description": "CDK CLI pinned for this project. Run synth/diff only; deploy needs explicit approval.",
+  "scripts": {
+    "synth": "cdk synth --no-notices",
+    "diff": "cdk diff --no-notices"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.1145.0"
+  }
+}
