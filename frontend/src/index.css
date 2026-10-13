@@ -4,7 +4,31 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  /*
+   * Neutrals: Tailwind's slate is cool blue-grey; this is a warm paper/ink ramp that matches the
+   * chart palette's warm greys. Overriding the slate scale re-themes every page in one place.
+   */
+  --color-slate-50: #f7f6f3;
+  --color-slate-100: #efede8;
+  --color-slate-200: #e3e0d9;
+  --color-slate-300: #cfcbc1;
+  --color-slate-400: #a29e93;
+  --color-slate-500: #75716a;
+  --color-slate-600: #5a5750;
+  --color-slate-700: #43413c;
+  --color-slate-800: #2b2a27;
+  --color-slate-900: #1d1c1a;
+  --color-slate-950: #131211;
+
+  /* Single accent = the first chart series, so UI and data share one blue */
+  --color-accent-50: #edf3fb;
+  --color-accent-400: #6ea8ee;
+  --color-accent-500: #2a78d6;
+  --color-accent-600: #1f63b8;
+  --color-accent-700: #1a5299;
 }
 
 /*
@@ -38,7 +62,7 @@
 
 html.dark {
   color-scheme: dark;
-  --chart-surface: #0f172a; /* slate-900 card */
+  --chart-surface: #1d1c1a; /* slate-900 panel */
   --chart-grid: #2c2c2a;
   --chart-axis: #383835;
   --chart-muted: #898781;
@@ -57,14 +81,19 @@ html.dark {
 }
 
 body {
-  background: #f8fafc;
+  background: #f4f2ed;
+  -webkit-font-smoothing: antialiased;
 }
 html.dark body {
-  background: #020617;
+  background: #131211;
 }
 
-.tabular {
+/* Money and counts in the mono face, so columns of figures line up */
+.tabular,
+.figure {
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 /* Recharts focus outline is noisy on click; keep keyboard focus visible */

@@ -4,7 +4,7 @@ import { qs } from '../api/client.ts'
 import type { Breakdown, TagCompliance } from '../api/types.ts'
 import { useAccountApi } from '../api/useAccountApi.ts'
 import { BreakdownBars } from '../components/charts.tsx'
-import KpiCard from '../components/KpiCard.tsx'
+import KpiCard, { KpiStrip } from '../components/KpiCard.tsx'
 import NoAccount from '../components/NoAccount.tsx'
 import { AsyncBlock, Card, EmptyState, PageHeader, Pill, Segmented } from '../components/ui.tsx'
 import { useApp } from '../context/AppContext.tsx'
@@ -26,14 +26,14 @@ export default function Tags() {
       <PageHeader
         title="Tags"
         description="Required tags make costs attributable. Change the required set in Settings."
-        actions={<Link to="/settings#tags" className="text-sm text-emerald-700 hover:underline dark:text-emerald-400">Edit required tags</Link>}
+        actions={<Link to="/settings#tags" className="text-[13px] text-accent-600 hover:underline dark:text-accent-400">Edit required tags</Link>}
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <KpiStrip cols={3}>
         <KpiCard loading={!c} label="Tag compliance" value={c ? `${c.compliance_pct}%` : ''} footnote={c ? `${c.compliant_resources} of ${c.total_resources} resources fully tagged` : ''} />
         <KpiCard loading={!c} label="Non-compliant resources" value={c ? c.total_resources - c.compliant_resources : ''} footnote={c ? `Required: ${c.required_tags.join(', ')}` : ''} />
         <KpiCard loading={!c} label="Monthly cost not attributable" value={c ? fmt(c.untagged_monthly_cost_usd) : ''} footnote="Estimated cost of non-compliant resources" />
-      </div>
+      </KpiStrip>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Card title="Missing tags" subtitle="Resources missing each required tag">

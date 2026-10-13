@@ -37,7 +37,7 @@ const axisProps = {
 
 function TooltipBox({ title, rows, footer }: { title: string; rows: Array<{ color?: string; label: string; value: string }>; footer?: ReactNode }) {
   return (
-    <div className="min-w-44 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs shadow-lg dark:border-slate-700 dark:bg-slate-900">
+    <div className="min-w-44 rounded-md border border-slate-200 bg-white px-3 py-2 text-xs shadow-[0_6px_18px_-8px_rgb(0_0_0/0.3)] dark:border-slate-700 dark:bg-slate-900">
       <p className="mb-1 font-medium text-slate-900 dark:text-slate-100">{title}</p>
       {rows.map((r) => (
         <div key={r.label} className="flex items-center justify-between gap-4 py-0.5">

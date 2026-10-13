@@ -10,7 +10,7 @@ export default function NoAccount() {
         action={
           <Link
             to="/settings/connect"
-            className="mt-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            className="mt-2 rounded-[5px] bg-slate-900 px-3 py-1.5 text-[13px] font-medium text-slate-50 hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900"
           >
             Connect an AWS account
           </Link>

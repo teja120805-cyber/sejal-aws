@@ -230,7 +230,7 @@ function NotificationsCard({ settings, onSaved }: { settings: AccountSettings; o
               Remove webhook
             </Button>
           )}
-          <Link to="/budgets" className="text-sm text-emerald-700 hover:underline dark:text-emerald-400">
+          <Link to="/budgets" className="text-[13px] text-accent-600 hover:underline dark:text-accent-400">
             Send a test alert
           </Link>
         </div>
@@ -319,7 +319,7 @@ function ThresholdsForm({ rules, onSaved }: { rules: RuleInfo[]; onSaved: () => 
   return (
     <div className="space-y-4">
       {rules.map((r) => (
-        <div key={r.id} className="rounded-lg border border-slate-200 p-3 dark:border-slate-800">
+        <div key={r.id} className="rounded-md border border-slate-200 p-3 dark:border-slate-800">
           <div className="flex flex-wrap items-center gap-2">
             <SeverityBadge severity={r.severity} />
             <p className="font-medium">{r.title}</p>

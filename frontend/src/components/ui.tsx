@@ -13,29 +13,27 @@ export function Card({ title, subtitle, action, children, className = '' }: {
   className?: string
 }) {
   return (
-    <section
-      className={`rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5 ${className}`}
-    >
+    <section className={`rounded-md border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 ${className}`}>
       {(title || action) && (
-        <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
-          <div>
-            {title && <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</h2>}
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-slate-200 px-4 py-3 dark:border-slate-800 sm:px-5">
+          <div className="min-w-0">
+            {title && <h2 className="text-[13.5px] font-semibold text-slate-900 dark:text-slate-100">{title}</h2>}
             {subtitle && <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
           </div>
           {action}
         </div>
       )}
-      {children}
+      <div className="p-4 sm:p-5">{children}</div>
     </section>
   )
 }
 
 export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-        {description && <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{description}</p>}
+    <div className="mb-7 flex flex-wrap items-end justify-between gap-3 border-b border-slate-300/70 pb-4 dark:border-slate-800">
+      <div className="min-w-0">
+        <h1 className="text-[26px] font-semibold leading-tight tracking-[-0.015em]">{title}</h1>
+        {description && <p className="mt-1 max-w-2xl text-[13.5px] text-slate-500 dark:text-slate-400">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
@@ -45,10 +43,10 @@ export function PageHeader({ title, description, actions }: { title: string; des
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost'
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-emerald-600/50',
+  primary: 'bg-slate-900 text-slate-50 hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white',
   secondary:
-    'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800',
-  danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-600/50',
+    'border border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-600',
+  danger: 'bg-red-700 text-white hover:bg-red-800',
   ghost: 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
 }
 
@@ -62,7 +60,7 @@ export function Button({ variant = 'secondary', icon, busy, children, className 
       type="button"
       {...props}
       disabled={props.disabled || busy}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-1.5 rounded-[5px] px-3 py-1.5 text-[13px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${VARIANTS[variant]} ${className}`}
     >
       {busy ? <Spinner /> : icon ? <Icon d={icon} className="h-4 w-4" /> : null}
       {children}
@@ -108,10 +106,10 @@ export function ErrorState({ error, onRetry }: { error: ApiError | Error; onRetr
   return (
     <div
       role="alert"
-      className="flex flex-col items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-8 text-center dark:border-red-900/60 dark:bg-red-950/30"
+      className="flex flex-col items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-8 text-center dark:border-red-900/60 dark:bg-red-950/30"
     >
       <Icon d={ICONS.alert} className="h-7 w-7 text-red-600 dark:text-red-400" />
-      <p className="text-sm font-medium text-red-800 dark:text-red-300">Something went wrong</p>
+      <p className="text-sm font-medium text-red-800 dark:text-red-300">Couldn't load this</p>
       <p className="max-w-md text-sm text-red-700 dark:text-red-300/80">{error.message}</p>
       {onRetry && (
         <Button onClick={onRetry} icon={ICONS.refresh}>
@@ -144,7 +142,7 @@ const SEVERITY_STYLE: Record<Severity, { label: string; dot: string; icon: strin
 export function SeverityBadge({ severity }: { severity: Severity }) {
   const s = SEVERITY_STYLE[severity]
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-2 py-0.5 text-xs font-medium text-slate-700 dark:border-slate-700 dark:text-slate-200">
+    <span className="inline-flex w-[4.5rem] items-center gap-1 text-xs font-medium text-slate-700 dark:text-slate-300">
       <span style={{ color: s.dot }}>
         <Icon d={s.icon} className="h-3.5 w-3.5" />
       </span>
@@ -158,9 +156,9 @@ export function Pill({ children, tone = 'neutral' }: { children: ReactNode; tone
     neutral: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
     good: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300',
     bad: 'bg-red-50 text-red-800 dark:bg-red-500/10 dark:text-red-300',
-    info: 'bg-sky-50 text-sky-800 dark:bg-sky-500/10 dark:text-sky-300',
+    info: 'bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-400',
   }
-  return <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tones[tone]}`}>{children}</span>
+  return <span className={`inline-flex items-center rounded-[4px] px-1.5 py-0.5 text-xs font-medium ${tones[tone]}`}>{children}</span>
 }
 
 export function Modal({ open, title, onClose, children, footer }: {
@@ -180,7 +178,7 @@ export function Modal({ open, title, onClose, children, footer }: {
   }, [open, onClose])
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-4 sm:items-center" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/45 p-4 sm:items-center" onClick={onClose}>
       <div
         ref={ref}
         role="dialog"
@@ -188,7 +186,7 @@ export function Modal({ open, title, onClose, children, footer }: {
         aria-label={title}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white shadow-xl outline-none dark:bg-slate-900"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-md border border-slate-300 bg-white shadow-[0_12px_32px_-12px_rgb(0_0_0/0.35)] outline-none dark:border-slate-700 dark:bg-slate-900"
       >
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3 dark:border-slate-800">
           <h2 className="font-semibold">{title}</h2>
@@ -214,7 +212,7 @@ export function Field({ label, hint, children }: { label: string; hint?: ReactNo
 }
 
 const inputBase =
-  'rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100'
+  'rounded-[5px] border border-slate-300 bg-white px-2.5 py-1.5 text-[13px] text-slate-900 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/25 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100'
 
 export const inputClass = `w-full ${inputBase}`
 /** For selects/inputs that sit inline in a toolbar. */
@@ -227,7 +225,7 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
   label: string
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex rounded-lg border border-slate-300 p-0.5 dark:border-slate-700">
+    <div role="radiogroup" aria-label={label} className="inline-flex rounded-[5px] border border-slate-300 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-900">
       {options.map((o) => (
         <button
           key={o.value}
@@ -235,7 +233,7 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
           role="radio"
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
-          className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+          className={`rounded-[3px] px-2 py-0.5 text-xs font-medium transition-colors ${
             value === o.value
               ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
               : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'

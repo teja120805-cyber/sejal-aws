@@ -8,12 +8,21 @@ import { currentUserEmail, isAuthEnabled, logout } from '../lib/auth.ts'
 import { timeAgo } from '../lib/format.ts'
 import { NAV_ITEMS } from '../lib/nav.ts'
 import Icon from './Icon.tsx'
+import { Wordmark } from './Logo.tsx'
 import { Button, Segmented } from './ui.tsx'
 import { ICONS } from '../lib/icons.ts'
 
 const SUN = 'M12 4V2m0 20v-2m8-8h2M2 12h2m13.7-5.7l1.4-1.4M4.9 19.1l1.4-1.4m0-11.4L4.9 4.9m14.2 14.2l-1.4-1.4M12 17a5 5 0 100-10 5 5 0 000 10z'
 const MOON = 'M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z'
 const MENU = 'M4 6h16M4 12h16M4 18h16'
+
+// Sidebar sections, in the order a FinOps review usually goes: what we spend, what to cut, guardrails
+const NAV_GROUPS = [
+  { label: 'Spend', paths: ['/overview', '/costs'] },
+  { label: 'Optimise', paths: ['/resources', '/recommendations'] },
+  { label: 'Govern', paths: ['/budgets', '/tags'] },
+  { label: 'Workspace', paths: ['/settings'] },
+].map((g) => ({ label: g.label, items: NAV_ITEMS.filter((i) => g.paths.includes(i.path)) }))
 
 function RefreshButton() {
   const { account, config, reloadAccounts, bumpData } = useApp()
@@ -72,51 +81,56 @@ export default function Layout() {
   return (
     <div className="min-h-screen text-slate-900 dark:text-slate-100">
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-60 transform flex-col border-r border-slate-200 bg-white transition-transform dark:border-slate-800 dark:bg-slate-900 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-30 flex w-56 transform flex-col border-r border-slate-200 bg-slate-50 transition-transform dark:border-slate-800 dark:bg-slate-950 lg:translate-x-0 ${
           menuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex h-16 items-center gap-2 px-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">F</div>
-          <div>
-            <p className="font-semibold leading-tight tracking-tight">FinOps</p>
-            <p className="text-[11px] leading-tight text-slate-500">AWS cost optimisation</p>
-          </div>
+        <div className="flex h-14 items-center px-4">
+          <Wordmark />
         </div>
-        <nav className="flex-1 space-y-1 px-3" aria-label="Main">
-          {NAV_ITEMS.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
-                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
-                }`
-              }
-            >
-              <Icon d={item.icon} />
-              {item.label}
-            </NavLink>
+        <nav className="flex-1 overflow-y-auto px-2 pt-2" aria-label="Main">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label} className="mb-5">
+              <p className="px-2 pb-1.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">{group.label}</p>
+              {group.items.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `relative flex items-center gap-2.5 rounded-[5px] px-2 py-1.5 text-[13.5px] transition-colors ${
+                      isActive
+                        ? 'bg-white font-medium text-slate-900 shadow-[0_0_0_1px_var(--color-slate-200)] before:absolute before:inset-y-1.5 before:-left-2 before:w-[3px] before:rounded-r before:bg-accent-500 dark:bg-slate-900 dark:text-slate-50 dark:shadow-[0_0_0_1px_var(--color-slate-800)]'
+                        : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
+                    }`
+                  }
+                >
+                  <Icon d={item.icon} className="h-4 w-4 opacity-70" />
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
-        {config.demo_mode && (
-          <div className="m-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900 dark:bg-amber-500/10 dark:text-amber-200">
-            <p className="font-semibold">Demo mode</p>
-            <p className="mt-0.5">Generated data, no AWS account connected.</p>
-          </div>
-        )}
+        <div className="border-t border-slate-200 px-4 py-3 text-xs dark:border-slate-800">
+          {config.demo_mode ? (
+            <p className="text-slate-500 dark:text-slate-400">
+              <span className="mr-1.5 inline-block h-1.5 w-1.5 -translate-y-px rounded-full bg-amber-500" aria-hidden="true" />
+              Demo data, no AWS account
+            </p>
+          ) : (
+            <p className="text-slate-500 dark:text-slate-400">Home region {config.region}</p>
+          )}
+        </div>
       </aside>
 
       {menuOpen && <div className="fixed inset-0 z-20 bg-slate-900/40 lg:hidden" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
 
-      <div className="lg:pl-60">
-        <header className="sticky top-0 z-10 flex h-16 items-center gap-1.5 border-b border-slate-200 bg-white/85 px-3 backdrop-blur dark:border-slate-800 dark:bg-slate-900/85 sm:gap-2 sm:px-6">
+      <div className="lg:pl-56">
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-1.5 border-b border-slate-200 bg-[#f4f2ed] px-3 dark:border-slate-800 dark:bg-slate-950 sm:gap-2 sm:px-6">
           <button
             type="button"
-            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden"
+            className="rounded-[5px] p-2 text-slate-600 hover:bg-slate-200/60 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
@@ -128,7 +142,7 @@ export default function Layout() {
               aria-label="AWS account"
               value={account?.id ?? ''}
               onChange={(e) => (e.target.value === '__add' ? navigate('/settings/connect') : selectAccount(e.target.value))}
-              className="min-w-0 max-w-[7rem] truncate rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 sm:max-w-xs"
+              className="min-w-0 max-w-[7rem] truncate rounded-[5px] border border-slate-300 bg-white px-2 py-1.5 text-[13px] font-medium dark:border-slate-700 dark:bg-slate-900 sm:max-w-xs"
             >
               {accounts.map((a) => (
                 <option key={a.id} value={a.id}>
@@ -153,7 +167,7 @@ export default function Layout() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="rounded-[5px] p-2 text-slate-600 hover:bg-slate-200/60 dark:text-slate-300 dark:hover:bg-slate-800"
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             <Icon d={theme === 'dark' ? SUN : MOON} />
@@ -163,13 +177,13 @@ export default function Layout() {
               type="button"
               onClick={logout}
               title={currentUserEmail() ?? 'Sign out'}
-              className="rounded-lg px-2 py-1.5 text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="rounded-[5px] px-2 py-1.5 text-sm text-slate-600 hover:bg-slate-200/60 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               Sign out
             </button>
           )}
         </header>
-        <main className="mx-auto max-w-7xl p-4 sm:p-6">
+        <main className="mx-auto max-w-[1280px] px-4 py-6 sm:px-8 sm:py-8">
           <Outlet />
         </main>
       </div>

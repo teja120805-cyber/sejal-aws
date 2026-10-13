@@ -3,7 +3,7 @@ import { api, enc, qs } from '../api/client.ts'
 import type { Finding, FindingList, FindingStatus, RemediationPreview, Severity } from '../api/types.ts'
 import { useAccountApi } from '../api/useAccountApi.ts'
 import { BreakdownBars } from '../components/charts.tsx'
-import KpiCard from '../components/KpiCard.tsx'
+import KpiCard, { KpiStrip } from '../components/KpiCard.tsx'
 import NoAccount from '../components/NoAccount.tsx'
 import { AsyncBlock, Button, Card, EmptyState, ErrorState, Modal, PageHeader, Segmented, SeverityBadge, inputClass, inlineInputClass } from '../components/ui.tsx'
 import { ICONS } from '../lib/icons.ts'
@@ -64,7 +64,7 @@ function RemediationDialog({ finding, onClose, onDone }: { finding: Finding; onC
             <p className="text-sm text-emerald-700 dark:text-emerald-400">✓ {result}</p>
           ) : p ? (
             <div className="space-y-4 text-sm">
-              <div className="rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60">
+              <div className="rounded-md bg-slate-50 p-3 dark:bg-slate-800/60">
                 <p className="font-medium">{p.description ?? 'No automated action available'}</p>
                 {p.api_call && <p className="mt-1 font-mono text-xs text-slate-500">AWS API: {p.api_call}</p>}
                 <p className="mt-2">
@@ -84,7 +84,7 @@ function RemediationDialog({ finding, onClose, onDone }: { finding: Finding; onC
                   <input className={`${inputClass} mt-1 font-mono`} value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" />
                 </label>
               ) : (
-                <p className="rounded-lg border border-slate-200 p-3 text-slate-600 dark:border-slate-700 dark:text-slate-300">
+                <p className="rounded-md border border-slate-200 p-3 text-slate-600 dark:border-slate-700 dark:text-slate-300">
                   {p.disabled_reason}
                 </p>
               )}
@@ -125,7 +125,7 @@ export default function Recommendations() {
     <div className="space-y-6">
       <PageHeader title="Recommendations" description="Waste detected by 8 rules. Savings are estimates from list prices." />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <KpiStrip cols={3}>
         <KpiCard loading={!totals} label="Potential savings / month" value={totals ? fmt(totals.total_monthly_savings_usd) : ''} />
         <KpiCard loading={!totals} label="Potential savings / year" value={totals ? fmt(totals.total_monthly_savings_usd * 12, 0) : ''} />
         <KpiCard
@@ -134,7 +134,7 @@ export default function Recommendations() {
           value={totals?.total ?? ''}
           footnote={totals ? `${totals.by_severity.high} high · ${totals.by_severity.medium} medium · ${totals.by_severity.low} low` : ''}
         />
-      </div>
+      </KpiStrip>
 
       {totals && totals.by_rule.length > 0 && (
         <Card title="Savings by rule" subtitle="Monthly, open recommendations">
@@ -192,7 +192,7 @@ export default function Recommendations() {
                       </p>
                       <p className="text-sm text-slate-600 dark:text-slate-400">{f.detail}</p>
                       <p className="text-sm">
-                        <span className="font-medium text-emerald-700 dark:text-emerald-400">Recommendation:</span> {f.recommendation}
+                        <span className="font-medium text-slate-900 dark:text-slate-100">Recommendation:</span> {f.recommendation}
                       </p>
                       <p className="text-xs text-slate-500">First seen {timeAgo(f.first_seen)}</p>
                     </div>

@@ -13,7 +13,7 @@ function Step({ n, title, active, done, children }: { n: number; title: string; 
       <div className="flex items-start gap-3">
         <div
           className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-            done ? 'bg-emerald-600 text-white' : active ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900' : 'bg-slate-200 text-slate-500 dark:bg-slate-800'
+            done ? 'bg-accent-600 text-white' : active ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900' : 'bg-slate-200 text-slate-500 dark:bg-slate-800'
           }`}
         >
           {done ? '✓' : n}
@@ -91,7 +91,7 @@ export default function ConnectAccount() {
         description="The platform never asks for access keys. You create a read-only IAM role in your account that trusts this platform, protected by a unique ExternalId."
       />
       {config.demo_mode && (
-        <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-500/10 dark:text-amber-200">
+        <p className="rounded-md bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-500/10 dark:text-amber-200">
           Demo mode: the connection test is simulated, so you can walk through the flow without AWS.
         </p>
       )}
@@ -103,7 +103,7 @@ export default function ConnectAccount() {
               <Step n={1} title="Deploy the read-only role in your AWS account" active={step === 1} done={step > 1}>
                 <div className="space-y-3 text-sm">
                   <p>Create a CloudFormation stack from the template below with these parameters:</p>
-                  <dl className="grid grid-cols-1 gap-2 rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60 sm:grid-cols-3">
+                  <dl className="grid grid-cols-1 gap-2 rounded-md bg-slate-50 p-3 dark:bg-slate-800/60 sm:grid-cols-3">
                     <dt className="text-slate-500">TrustedAccountId</dt>
                     <dd className="flex items-center gap-2 sm:col-span-2"><code>{o.trusted_account_id}</code><CopyButton text={o.trusted_account_id} /></dd>
                     <dt className="text-slate-500">ExternalId</dt>
@@ -111,7 +111,7 @@ export default function ConnectAccount() {
                   </dl>
                   <div className="flex flex-wrap gap-2">
                     {o.quick_create_url && (
-                      <a href={o.quick_create_url} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700">
+                      <a href={o.quick_create_url} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-[5px] bg-slate-900 px-3 py-1.5 text-[13px] font-medium text-slate-50 hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900">
                         Launch stack in AWS console
                       </a>
                     )}
@@ -119,11 +119,11 @@ export default function ConnectAccount() {
                     <Button variant="ghost" onClick={() => setShowTemplate(!showTemplate)}>{showTemplate ? 'Hide' : 'View'} template</Button>
                   </div>
                   {showTemplate && (
-                    <pre className="max-h-80 overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-slate-100">{o.template}</pre>
+                    <pre className="max-h-80 overflow-auto rounded-md bg-slate-950 p-3 text-xs text-slate-100">{o.template}</pre>
                   )}
                   <p className="text-slate-600 dark:text-slate-400">Or with the AWS CLI:</p>
                   <div className="flex items-start gap-2">
-                    <pre className="flex-1 overflow-x-auto rounded-lg bg-slate-950 p-3 text-xs text-slate-100">{o.cli_command}</pre>
+                    <pre className="flex-1 overflow-x-auto rounded-md bg-slate-950 p-3 text-xs text-slate-100">{o.cli_command}</pre>
                     <CopyButton text={o.cli_command} />
                   </div>
                   <p className="text-xs text-slate-500">

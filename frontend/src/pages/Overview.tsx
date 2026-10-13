@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import type { Alert, Anomaly, Breakdown, CostSummary, DailySeries, FindingList } from '../api/types.ts'
 import { useAccountApi } from '../api/useAccountApi.ts'
 import { BreakdownBars, BudgetMeter, TrendChart } from '../components/charts.tsx'
-import KpiCard from '../components/KpiCard.tsx'
+import KpiCard, { KpiStrip } from '../components/KpiCard.tsx'
 import NoAccount from '../components/NoAccount.tsx'
 import { AsyncBlock, Card, EmptyState, PageHeader, SeverityBadge } from '../components/ui.tsx'
 import { useApp } from '../context/AppContext.tsx'
@@ -30,7 +30,7 @@ export default function Overview() {
       {summary.error ? (
         <AsyncBlock state={summary}>{() => null}</AsyncBlock>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiStrip>
           <KpiCard
             loading={!s}
             label="Month-to-date spend"
@@ -57,12 +57,12 @@ export default function Overview() {
             value={s ? fmt(s.potential_savings_usd) : ''}
             footnote={s ? `${s.open_findings} open recommendations` : ''}
           />
-        </div>
+        </KpiStrip>
       )}
 
       {s?.budget && (
         <Card title="Budget" subtitle={`Actual ${s.budget.actual_pct}% · forecast ${s.budget.forecast_pct}% of ${fmt(s.budget.limit_usd, 0)}`}
-          action={<Link to="/budgets" className="text-sm text-emerald-700 hover:underline dark:text-emerald-400">Manage</Link>}>
+          action={<Link to="/budgets" className="text-[13px] text-accent-600 hover:underline dark:text-accent-400">Manage</Link>}>
           <BudgetMeter actualPct={s.budget.actual_pct} forecastPct={s.budget.forecast_pct} thresholds={[80, 100]} />
         </Card>
       )}
@@ -72,7 +72,7 @@ export default function Overview() {
           className="xl:col-span-2"
           title="Daily cost, last 90 days"
           subtitle={anomalies.data?.length ? 'Red dot = cost anomaly (above 30-day mean + 3σ)' : 'Total across all services'}
-          action={<Link to="/costs" className="text-sm text-emerald-700 hover:underline dark:text-emerald-400">Details</Link>}
+          action={<Link to="/costs" className="text-[13px] text-accent-600 hover:underline dark:text-accent-400">Details</Link>}
         >
           <AsyncBlock state={daily} height="h-56">
             {(d) =>
@@ -97,7 +97,7 @@ export default function Overview() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Card
           title="Top recommendations"
-          action={<Link to="/recommendations" className="text-sm text-emerald-700 hover:underline dark:text-emerald-400">View all</Link>}
+          action={<Link to="/recommendations" className="text-[13px] text-accent-600 hover:underline dark:text-accent-400">View all</Link>}
         >
           <AsyncBlock state={findings}>
             {(f) =>
@@ -120,14 +120,14 @@ export default function Overview() {
                     ))}
                 </ul>
               ) : (
-                <EmptyState title="No waste found" message="Nice - nothing to optimise right now." />
+                <EmptyState title="No waste found" message="None of the 8 rules matched anything in this account." />
               )
             }
           </AsyncBlock>
         </Card>
         <Card
           title="Recent alerts"
-          action={<Link to="/budgets" className="text-sm text-emerald-700 hover:underline dark:text-emerald-400">History</Link>}
+          action={<Link to="/budgets" className="text-[13px] text-accent-600 hover:underline dark:text-accent-400">History</Link>}
         >
           <AsyncBlock state={alerts}>
             {(list) =>

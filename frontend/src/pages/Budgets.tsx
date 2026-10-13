@@ -86,7 +86,7 @@ export default function Budgets() {
         actions={
           <>
             <Button icon={ICONS.bolt} busy={testing} onClick={sendTest}>Send test alert</Button>
-            <Link to="/settings#notifications" className="text-sm text-emerald-700 hover:underline dark:text-emerald-400">Notification settings</Link>
+            <Link to="/settings#notifications" className="text-[13px] text-accent-600 hover:underline dark:text-accent-400">Notification settings</Link>
           </>
         }
       />
