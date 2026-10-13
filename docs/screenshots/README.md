@@ -5,7 +5,7 @@ capture. Re-capture them before submission if the UI changes.
 
 | File | Page |
 |---|---|
-| `overview.png` | Overview: KPI cards, budget meter, 90-day trend with the anomaly marked, top services, top recommendations, recent alerts |
+| `overview.png` | Overview: summary strip, budget meter, 90-day trend with the anomaly marked, top services, top recommendations, recent alerts |
 | `costs-dark.png` | Costs (dark mode): stacked daily cost by service, breakdown, forecast (linear vs Cost Explorer), anomaly table |
 | `resources.png` | Resource inventory with filters, sorting and CSV export |
 | `recommendations.png` | Waste findings with savings by rule and per-finding actions |
